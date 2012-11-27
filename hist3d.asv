@@ -29,6 +29,9 @@ function frequencies = hist3d(im,n,scaleFactor)
 
 	%% Computing the frequencies
 	frequencies = zeros(n,n,n);  % initialization of vector, which will be used for saving the frequencies
+     n1 = 1;
+     n2 = 1;
+     n3 = 1;
      m1 = zeros(size(im));
      m2 = zeros(size(im));
      m3 = zeros(size(im));
@@ -37,18 +40,20 @@ function frequencies = hist3d(im,n,scaleFactor)
      m3 = im(:,:,3) == 0;
      frequencies(1, 1, 1) = length(find(m1(m2(m3 == 1) == 1) == 1));
      for n1 = 1:n
-         R = step:step:1;
-         R
-         for n2 = 1:n
-             G = step:step:1;
-             for n3 = 1:n
-                 B = step:step:1;
+         R = step:step:1
+         for n2 = 1:
+             for B = step:step:1
                  m1 = im((im(:,:,1) > R-step)+(im(:,:,1) <= R)== 2);
                  m2 = im((im(:,:,2) > G-step)+(im(:,:,2) <= G)== 2);
                  m3 = im((im(:,:,3) > B-step)+(im(:,:,3) <= B)== 2);
                  frequencies(n1, n2, n3) = frequencies(n1, n2, n3) + length(find(m1(m2(m3 == 1) == 1) == 1));
+                 n3 = n3+1;
              end
+             n2 = n2+1;
+             n3 = 1;
          end
+         n1 = n1+ 1;
+         n2 = 1;
      end
     
 % 	for col = 1:imWidth
