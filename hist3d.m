@@ -19,9 +19,10 @@ function frequencies = hist3d(im,n,scaleFactor)
 
 	
 	[imHeight,imWidth,imDim] = size(im);
-    im = RGB_rgb(im);
-    %im2double only takes the intensity
-% 	im = im2double(im)% convert to interval [0,1]
+    %normalized rgb might be another option
+%     im = RGB_rgb(im);
+    %im2double takes the intensity
+ 	im = im2double(im); % convert to interval [0,1]
 
 	%% assigning the pixels to the histogram cells
 %    step = 255/n;
