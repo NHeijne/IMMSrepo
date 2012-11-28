@@ -33,11 +33,11 @@ function tracker1(directory)
 			
 			possibleObject = im(j:min(j+objectHeight,imHeight), i:min(i+objectWidth,imWidth),:);
 			
-            trackedHist2 = hist3d(possibleObject);
-%             sumhist = sum(sum(sum(trackedHist)));
-%             normtrackedHist2 = trackedHist ./ sumhist;
+            trackedHist = hist3d(possibleObject);
+            sumhist = sum(sum(sum(trackedHist)));
+            normtrackedHist2 = trackedHist ./ sumhist;
             
-			dist = 1-sqrt(sum(sum(sum(sqrt(trackedHist.*trackedHist2)))));%histDist(trackedObject, possibleObject); %% TODO
+			dist = 1-sqrt(sum(sum(sum(sqrt(normtrackedHist.*normtrackedHist2)))));%histDist(trackedObject, possibleObject); %% TODO
             
 			
 			if (dist <= maxHistDistance) 
@@ -56,8 +56,8 @@ function tracker1(directory)
 	maxWidth = min(imWidth, bestPosI+objectWidth);
 	trackedObject = im(bestPosJ:maxHeight, bestPosI:maxWidth,:);
     trackedHist = hist3d(trackedObject); % frequencies normalized between 0 and 1
-%     sumhist = sum(sum(sum(trackedHist)));
-%     normtrackedHist = trackedHist ./ sumhist;
+    sumhist = sum(sum(sum(trackedHist)));
+    normtrackedHist = trackedHist ./ sumhist;
     
 	im(bestPosJ:maxHeight, bestPosI,:) = 0;
 	im(bestPosJ,bestPosI:maxWidth,:) = 0;
