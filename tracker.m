@@ -24,18 +24,14 @@ function tracker1(directory)
   interval=5;
   updateObject = 1;
   %% Find most similar new window position to the tracked object from previous   
-  bestPosI = -1;
-  bestPosJ = -1;
+  bestPosI = min(x);
+  bestPosJ = min(y);
   for n = 4:nrFiles
     im = imread([directory '/' files(n).name]);	
     maxHistDistance = realmax;
 	
-    % LOOP KLOPT NIET
-    % x EN y WORDEN NIET GEUPDATE
-    % EN HIJ GAAT TE VER NAAR RECHTS EN ONDER, WANT WE PAKKEN DE
-    % LINKSBOVENHOEK
-	for i = max(1, (min(x) - searchWindowWidth)) : interval : min(imWidth, max(x) + searchWindowWidth/2)
-		for j = max (1, min(y) - searchWindowHeight) : interval : min(imHeight, max(y) + searchWindowHeight/2)
+    for i = max(1, (bestPosI - searchWindowWidth)) : interval : min(imWidth, bestPosI + searchWindowWidth)
+		for j = max (1, bestPosJ - searchWindowHeight) : interval : min(imHeight, bestPosJ + searchWindowHeight)
 			
 			possibleObject = im(j:min(j+objectHeight,imHeight), i:min(i+objectWidth,imWidth),:);
 			
@@ -65,11 +61,10 @@ function tracker1(directory)
     if (updateObject == 1)
         trackedObject = im(bestPosJ:maxHeight, bestPosI:maxWidth,:);
         
-       % trackedHist = hist3d(trackedObject); % frequencies normalized between 0 and 1
-        %sumhist = sum(sum(sum(trackedHist)));
-        %normtrackedHist = trackedHist ./ sumhist;
-        imshow(trackedObject);
-        pause(1);
+        trackedHist = hist3d(trackedObject); % frequencies normalized between 0 and 1
+        sumhist = sum(sum(sum(trackedHist)));
+        normtrackedHist = trackedHist ./ sumhist;
+        
     end
     
 	im(bestPosJ:maxHeight, bestPosI,:) = 0;
