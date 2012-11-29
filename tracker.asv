@@ -31,9 +31,7 @@ function tracker1(directory)
     maxHistDistance = realmax;
 	
     % LOOP KLOPT NIET
-    % x EN y WORDEN NIET GEUPDATE
-    % EN HIJ GAAT TE VER NAAR RECHTS EN ONDER, WANT WE PAKKEN DE
-    % LINKSBOVENHOEK
+    % x EN y WORDEN N
 	for i = max(1, (min(x) - searchWindowWidth)) : interval : min(imWidth, max(x) + searchWindowWidth/2)
 		for j = max (1, min(y) - searchWindowHeight) : interval : min(imHeight, max(y) + searchWindowHeight/2)
 			
