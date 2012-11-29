@@ -1,0 +1,17 @@
+function cImage = compress_image(image, stepSize)
+
+    [hIm,wIm,dIm] = size(image);
+    height = ceil(hIm / stepSize);
+    width = ceil(wIm / stepSize);
+    
+    cImage = zeros(height, width, dIm);
+    
+    cI=1;
+    cJ = 1;
+    for i=1:stepSize:hIm
+        for j=1:stepSize:wIm
+            nbh_matrix = nbh(i, j, stepSize-1);
+            cImage(cI, cJ) = nbh(
+    
+
+end

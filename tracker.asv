@@ -24,19 +24,23 @@ function tracker1(directory)
   interval=5;
   updateObject = 1;
   %% Find most similar new window position to the tracked object from previous   
-  bestPosI = -1;
-  bestPosJ = -1;
+  bestPosI = min(x);
+  bestPosJ = min(y);
   for n = 4:nrFiles
     im = imread([directory '/' files(n).name]);	
     maxHistDistance = realmax;
 	
-    % LOOP KLOPT NIET
-    % x EN y WORDEN N
-	for i = max(1, (min(x) - searchWindowWidth)) : interval : min(imWidth, max(x) + searchWindowWidth/2)
-		for j = max (1, min(y) - searchWindowHeight) : interval : min(imHeight, max(y) + searchWindowHeight/2)
+    for i = max(1, (bestPosI - searchWindowWidth)) : interval : min(imWidth, bestPosI + searchWindowWidth)
+		for j = max (1, bestPosJ - searchWindowHeight) : interval : min(imHeight, bestPosJ + searchWindowHeight)
 			
-			possibleObject = im(j:min(j+objectHeight,imHeight), i:min(i+objectWidth,imWidth),:);
-			
+            maxHeightObject = min(j+objectHeight,imHeight);
+            maxWidthObject = min(i+objectWidth,imWidth);
+			possibleObject = im(j:maxHeightObject, i:maxWidthObject,:);
+            fillEmptyValue = 0;
+            % set pixels outside of image to be 'fillEmptyValue'
+            possibleObject(maxHeightObject+1:objectHeight, maxWidthObject+1:objectWidth) = fillEmptyValue;
+            
+            
             trackedHist = hist3d(possibleObject);
             sumhist = sum(sum(sum(trackedHist)));
             normtrackedHist2 = trackedHist ./ sumhist;
@@ -56,18 +60,20 @@ function tracker1(directory)
 	bestPosI
 	
     
-	maxHeight = min(imHeight, bestPosJ+objectHeight);
-	maxWidth = min(imWidth, bestPosI+objectWidth);
+	
 	
     % update target object
     if (updateObject == 1)
+        maxHeight = min(imHeight, bestPosJ+objectHeight);
+        maxWidth = min(imWidth, bestPosI+objectWidth);
         trackedObject = im(bestPosJ:maxHeight, bestPosI:maxWidth,:);
+        fillEmptyValue = 0;
+        trackedObject(maxHeight+1:objectHeight, maxWidth+1:objectWidth) = fillEmptyValue;
+       
+        trackedHist = hist3d(trackedObject); % frequencies normalized between 0 and 1
+        sumhist = sum(sum(sum(trackedHist)));
+        normtrackedHist = trackedHist ./ sumhist;
         
-       % trackedHist = hist3d(trackedObject); % frequencies normalized between 0 and 1
-        %sumhist = sum(sum(sum(trackedHist)));
-        %normtrackedHist = trackedHist ./ sumhist;
-        imshow(trackedObject);
-        pause(1);
     end
     
 	im(bestPosJ:maxHeight, bestPosI,:) = 0;
