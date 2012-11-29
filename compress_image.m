@@ -1,8 +1,9 @@
 function cImage = compress_image(image, stepSize)
+% stepSize must be > 1 !
 
     [hIm,wIm,dIm] = size(image);
-    height = ceil(hIm / stepSize);
-    width = ceil(wIm / stepSize);
+    height = ceil(hIm / (stepSize));
+    width = ceil(wIm / (stepSize));
     
     cImage = zeros(height, width, dIm);
     

@@ -14,7 +14,7 @@ function tracker2(directory)
   objectHeight = max(y)-min(y);
   objectWidth = max(x)-min(x);
   
-  compressStepSize = 5;
+  compressStepSize = 2;
   cObjectHeight = ceil(objectHeight / compressStepSize);
   cObjectWidth = ceil(objectWidth / compressStepSize);
   
@@ -35,11 +35,17 @@ function tracker2(directory)
   
   updateObject = 0;
   
+  imshow(trackedObjectC,'InitialMagnification',compressStepSize * 100);
+  pause(1);
+  
   for n = 4:nrFiles
     im = imread([directory '/' files(n).name]);	
     maxHistDistance = realmax;
 	bestObjectC = zeros(cObjectHeight, cObjectWidth);
     
+    % TODO:
+    % EERST TOTALE REGIO COMPRESSEN
+    % DAN LOOPEN
     for i = max(1, (bestPosI - searchWindowWidth)) : interval : min(imWidth, bestPosI + searchWindowWidth)
 		for j = max (1, bestPosJ - searchWindowHeight) : interval : min(imHeight, bestPosJ + searchWindowHeight)
 			
@@ -72,7 +78,7 @@ function tracker2(directory)
 	bestPosJ
 	bestPosI
 	
-    %imshow(bestObjectC);
+    %imshow(bestObjectC, 'InitialMagnification',compressStepSize * 100);
     %pause(1);
 	
 	maxHeight = min(imHeight, bestPosJ+objectHeight);
@@ -84,8 +90,7 @@ function tracker2(directory)
         trackedHist = hist3d(trackedObjectC); % frequencies normalized between 0 and 1
         sumhist = sum(sum(sum(trackedHist)));
         normtrackedHist = trackedHist ./ sumhist;
-        imshow(bestObjectC, 'InitialMagnification',compressStepSize * 100);
-        pause(1);
+        
         
     end
     
