@@ -1,29 +1,27 @@
 function frequencies = hist3d(im,n_,scaleFactor_)
-%%
+%
 % Input:
 %  im:		image 
 %  n: 			Number of histogram bins within each axis.
-%              	If undefined, the default number of bins is 5.
+%              	If undefined, the default number of bins is 8.
 % scaleFactor:	How much to scale the smaller frequences (so that they can be seen in the graph)
 %				value should be in [0, 1] !!! (0 = don't scale, 1 is highest scaling)
 %				It works like <in [0,1] normalized frequency>^(1-scaleFactor)
 %				If undefined, scaleFactor is 0.6.
 
-	%% set default number of bins if that number is not provided    
-    
-	n = 5;
-    scaleFactor = 0;
-	if (nargin < 2)
-		n = 5;
-		scaleFactor = 0.6;
-    elseif (nargin < 3)
+	%% set default number of bins if that number is not provided
+    n= 8;
+	if (nargin == 2)
 		n = n_;		
         scaleFactor = 0.6;
+	else if (nargin == 1)
+		n = 8;
+		scaleFactor = 0.6;
     else
-      disp('bla');  
+        
     end
     
-	%%
+	
 	[imHeight,imWidth,imDim] = size(im);
     %normalized rgb might be another option
 %     im = RGB_rgb(im);

@@ -1,7 +1,7 @@
 function tracker1(directory) 
 
   
-  
+  % dir = e.g. '../MoreFrames_part_1/part_1'
   files = dir(directory);
   nrFiles = size(files,1)-2; % Discard '.' and '..'
   
@@ -22,14 +22,15 @@ function tracker1(directory)
   searchWindowWidth = round(objectWidth/2);
   
   %% Find most similar new window position to the tracke dobjetc from previous 
-  maxHistDistance = realmax;
+  
   bestPosI = -1;
   bestPosJ = -1;
   for n = 4:size(files,1)
     im = imread([directory '/' files(n).name]);	
+    maxHistDistance = realmax;
 	
-	for i = max(1, (min(x) - searchWindowWidth)) : min(imWidth, max(x) + searchWindowWidth)
-		for j = max (1, min(y) - searchWindowHeight) : min(imHeight, max(y) + searchWindowHeight)
+	for i = max(1, (min(x) - searchWindowWidth)) : 5 : min(imWidth, max(x) + searchWindowWidth)
+		for j = max (1, min(y) - searchWindowHeight) : 5 : min(imHeight, max(y) + searchWindowHeight)
 			
 			possibleObject = im(j:min(j+objectHeight,imHeight), i:min(i+objectWidth,imWidth),:);
 			
@@ -37,17 +38,17 @@ function tracker1(directory)
             sumhist = sum(sum(sum(trackedHist)));
             normtrackedHist2 = trackedHist ./ sumhist;
             
-			dist = 1-sqrt(sum(sum(sum(sqrt(normtrackedHist.*normtrackedHist2)))));%histDist(trackedObject, possibleObject); %% TODO
-            
-			
-			if (dist <= maxHistDistance) 
-				maxHistDistance = dist;
-				bestPosI = i;
+            dist = bat_distance(normtrackedHist, normtrackedHist2);
+            			
+ 			if (dist <= maxHistDistance) 
+ 				maxHistDistance = dist;
+                bestPosI = i;
 				bestPosJ = j;
 			end
 		end
     end
     	
+    n
 	bestPosJ
 	bestPosI
 	

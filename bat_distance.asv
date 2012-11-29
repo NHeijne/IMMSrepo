@@ -1,0 +1,8 @@
+function D = bat_distance (hist1, hist2)
+
+    hist1 = reshape(hist1, 1, []);
+    hist2 = reshape(hist2, 1, []);
+    BC = 
+
+
+end
