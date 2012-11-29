@@ -33,7 +33,7 @@ function tracker2(directory)
   bestPosI = min(x);
   bestPosJ = min(y);
   
-  updateObject = 1;
+  updateObject = 0;
   
   for n = 4:nrFiles
     im = imread([directory '/' files(n).name]);	
