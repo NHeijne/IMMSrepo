@@ -1,5 +1,4 @@
-function tracker2(directory) 
-% deze is met compressie erbij
+function tracker1(directory) 
 
   
   % dir = e.g. '../MoreFrames_part_1/part_1'
@@ -14,40 +13,26 @@ function tracker2(directory)
   objectHeight = max(y)-min(y);
   objectWidth = max(x)-min(x);
   
-  compressStepSize = 6;
-  cObjectHeight = ceil(objectHeight / compressStepSize);
-  cObjectWidth = ceil(objectWidth / compressStepSize);
-  
-  trackedObject = im(min(y):max(y), min(x):max(x),:);  
-  trackedObjectC = compress_image(trackedObject, compressStepSize);
-  trackedHist = hist3d(trackedObjectC); 
+  trackedObject = im(min(y):max(y), min(x):max(x),:);
+  %imshow(trackedObject);
+  trackedHist = hist3d(trackedObject); 
   sumhist = sum(sum(sum(trackedHist)));
   normtrackedHist = trackedHist ./ sumhist; % frequencies normalized between 0 and 1
-  
   searchWindowHeight = round(objectHeight/2); % pixels
   searchWindowWidth = round(objectWidth/2);
   
-  interval = compressStepSize;
-  
+  interval=5;
+  updateObject = 0;
   %% Find most similar new window position to the tracked object from previous   
   bestPosI = min(x);
   bestPosJ = min(y);
-  
-  updateObject = 0;
-  
-  imshow(trackedObjectC,'InitialMagnification',compressStepSize * 100);
-  pause(1);
-  
   for n = 4:nrFiles
     im = imread([directory '/' files(n).name]);	
     maxHistDistance = realmax;
-	bestObjectC = zeros(cObjectHeight, cObjectWidth);
+	bestObject = zeros(objectHeight, objectWidth);
     
-    % TODO:
-    % EERST TOTALE REGIO COMPRESSEN
-    % DAN LOOPEN
-    for i = max(1, (bestPosI - searchWindowWidth)) : 3 : min(imWidth, bestPosI + searchWindowWidth)
-		for j = max (1, bestPosJ - searchWindowHeight) : 3 : min(imHeight, bestPosJ + searchWindowHeight)
+    for i = max(1, (bestPosI - searchWindowWidth)) : interval : min(imWidth, bestPosI + searchWindowWidth)
+		for j = max (1, bestPosJ - searchWindowHeight) : interval : min(imHeight, bestPosJ + searchWindowHeight)
 			
             maxHeightObject = min(j+objectHeight,imHeight);
             maxWidthObject = min(i+objectWidth,imWidth);
@@ -55,11 +40,8 @@ function tracker2(directory)
             fillEmptyValue = 0;
             % set pixels outside of image to be 'fillEmptyValue'
             possibleObject(maxHeightObject+1:objectHeight, maxWidthObject+1:objectWidth) = fillEmptyValue;
-             
-            possibleObjectC = compress_image(possibleObject, compressStepSize);
-            
-            
-            trackedHist = hist3d(possibleObjectC);
+                        
+            trackedHist = hist3d(possibleObject);
             sumhist = sum(sum(sum(trackedHist)));
             normtrackedHist2 = trackedHist ./ sumhist;
             
@@ -69,7 +51,7 @@ function tracker2(directory)
  				maxHistDistance = dist;
                 bestPosI = i;
 				bestPosJ = j;
-                bestObjectC = possibleObjectC;
+                bestObject = possibleObject;
 			end
 		end
     end
@@ -78,19 +60,24 @@ function tracker2(directory)
 	bestPosJ
 	bestPosI
 	
-    %imshow(bestObjectC, 'InitialMagnification',compressStepSize * 100);
-    %pause(1);
+    
 	
 	maxHeight = min(imHeight, bestPosJ+objectHeight);
     maxWidth = min(imWidth, bestPosI+objectWidth);
     % update target object
     if (updateObject == 1)
 
-        trackedObject = bestObjectC;
-        trackedHist = hist3d(trackedObjectC); % frequencies normalized between 0 and 1
+%         trackedObject = im(bestPosJ:maxHeight, bestPosI:maxWidth,:);
+%         fillEmptyValue = 0;
+%         % set pixels outside of image to be 'fillEmptyValue'
+%         trackedObject(maxHeight+1:objectHeight, maxWidth+1:objectWidth) = fillEmptyValue;
+       
+        trackedObject = bestObject;
+        trackedHist = hist3d(trackedObject); % frequencies normalized between 0 and 1
         sumhist = sum(sum(sum(trackedHist)));
         normtrackedHist = trackedHist ./ sumhist;
-        
+        imshow(bestObject);
+        pause(1);
         
     end
     
