@@ -47,9 +47,7 @@
      
     % sum has to be 1, so   
     M2 =  Matrix(limitDiff:height,limitDiff:width);
-   % M2 = (1- (Matrix ./ (halfSize1 * halfSize2).^2));
-    
-    numberDiv = sum(sum(M2)); 
-    weightMask = M2./numberDiv;
-    weightMask =  (1-weightMask)./(sum(sum(1-weightMask)))
+    M2 = (1- (M2 ./ ((height * width))));
+    weightMask = M2 ./ sum(sum(M2))
+    %weightMask = M2
 %end

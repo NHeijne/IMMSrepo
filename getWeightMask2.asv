@@ -46,8 +46,8 @@
     %M2(Index) = 0;
      
     % sum has to be 1, so   
-    M2 =  Matrix(limitDiff:size(MatrixHalf1,1)+(limitDiff-1),limitDiff:size(MatrixHalf1,2)+(limitDiff-1));
-    numberDiv = sum(sum(M2)); 
-    weightMask = M2./numberDiv;
-    
+    M2 =  Matrix(limitDiff:height,limitDiff:width);
+    M2 = (1- (Matrix ./ ((height * width))));
+    weightMask = M2 ./ sum(sum(M2));
+    weightMask = M2
 %end
