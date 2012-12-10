@@ -1,4 +1,4 @@
-%function [weightMask] = getWeightMask(im, h) 
+%function [weightMask] = getWeightMask1(im, h) 
 
     [height,width,dim] = size(im);
      
