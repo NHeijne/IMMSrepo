@@ -1,4 +1,4 @@
-function [weightMask] = getWeightMask3(im) 
+function [weightMask] = getWeightMask(im) 
     % returns Epanechnikov kernel based weight mask given an image
 
     [height,width,dim] = size(im);
@@ -7,9 +7,9 @@ function [weightMask] = getWeightMask3(im)
     C_d = pi;
     
     h = zeros(height,width);
-    R = (height + 1) / 2;
-    C = (width + 1) / 2;
-    sigma = 1.25;
+    %R = (height + 1) / 2
+    %C = (width + 1) / 2
+   % sigma = 1.25;
 
     [X,Y] = meshgrid(-(height-1)/2:(height-1)/2, -(width-1)/2:(width-1)/2); %faster
    % h = exp(-(X.^2 + Y.^2)/(2*sigma.^2));

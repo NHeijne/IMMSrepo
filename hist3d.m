@@ -34,7 +34,7 @@ function frequencies = hist3d(im,n_,scaleFactor_)
 %    step = 255/n;
 	step = 1/n;
  	imCells = ceil(im/step); % each pixel gets a number denoting cell
-  	imCells(imCells==0) = 1; % cell_no can be computed as 0, so we assing them to the first cell
+  	imCells(imCells==0) = 1 % cell_no can be computed as 0, so we assing them to the first cell
 	% imshow(imCells/n);
 
 	%% Computing the frequencies
