@@ -33,11 +33,13 @@ function frequencies = hist3d(x, y, width, height, wholeIm, n_,scaleFactor_)
     endY
     
     minXWholeIm= max(startX,1)
-    minYWholeIm = max(startX,1)
+    minYWholeIm = max(startY,1)
     maxYWholeIm= min(endY,wholeImHeight)
     maxXWholeIm = min(endX,wholeImWidth)
-     
+    
+    %IF...
     sWidth = width - (maxXWholeIm - minXWholeIm)
+    if (endY 
     sHeight = height - (maxYWholeIm - minYWholeIm)
     eWidth = (maxXWholeIm - minXWholeIm)+1
     eHeight = (maxYWholeIm - minYWholeIm)+1

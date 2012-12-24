@@ -36,19 +36,26 @@ function frequencies = hist3d(x, y, width, height, wholeIm, n_,scaleFactor_)
     minYWholeIm = max(startY,1)
     maxYWholeIm= min(endY,wholeImHeight)
     maxXWholeIm = min(endX,wholeImWidth)
-     
+    
+    %IF...
     sWidth = width - (maxXWholeIm - minXWholeIm)
-    sHeight = height - (maxYWholeIm - minYWholeIm)
+    if (startY < minYWholeIm)
+        sHeight = height - (maxYWholeIm - minYWholeIm)
+    else
+        sHeight=1
+    end
     eWidth = (maxXWholeIm - minXWholeIm)+1
     eHeight = (maxYWholeIm - minYWholeIm)+1
     
     
     partIm = wholeIm(minYWholeIm:maxYWholeIm,minXWholeIm:maxXWholeIm,:) 
-    avgChannels = mean(mean(partIm,1)); % mean of R, G and B
+    avgChannels =  mean(mean(partIm,1)); % mean of R, G and B
     
     im = zeros(height, width,3);
     im(1:height, 1:width,:) = repmat(avgChannels,height,width);
-    im(sHeight:eHeight,sWidth:eWidth,:) %= partIm;
+    im(sHeight:eHeight,sWidth:eWidth,:) = partIm;
+    
+    im
     
     
 	[imHeight,imWidth,imDim] = size(im);
@@ -59,7 +66,7 @@ function frequencies = hist3d(x, y, width, height, wholeIm, n_,scaleFactor_)
 	%% assigning the pixels to the histogram cells
 %    step = 255/n;
 	step = 1/n;
- 	imCells = ceil(im/step); % each pixel gets a number denoting cell
+ 	imCells = ceil(im/step); % each pixel gets a number denoting cell (cell is 3D thing)
   	imCells(imCells==0) = 1 % cell_no can be computed as 0, so we assing them to the first cell
 	% imshow(imCells/n);
 
@@ -74,6 +81,7 @@ function frequencies = hist3d(x, y, width, height, wholeIm, n_,scaleFactor_)
  		end
     end	
 
-    
+     sumFrequencies = sum(sum(sum(frequencies)));
+     frequencies = frequencies ./ sumFrequencies;
 
 end
