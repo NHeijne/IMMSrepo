@@ -31,6 +31,7 @@ function [pixelWeights,rows,cols] = getPixelWeights2(x,y,width,height,wholeIm,ta
             );
     end
     
+    pixelWeights;
     pixelWeights = reshape(pixelWeights,imSize,1);
     
      [X,Y] = meshgrid(-(height-1)/2:(height-1)/2, -(width-1)/2:(width-1)/2);

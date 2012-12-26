@@ -1,6 +1,6 @@
-%function [xN,yN] = getNewPos(x,y,width,height,wholeIm,targetHistogram)
+function [xN,yN] = getNewPos(x,y,width,height,wholeIm,targetHistogram)
 
-    [pixelWeights,rows,cols] = getPixelWeights(x,y,width,height,wholeIm,targetHistogram);
+    [pixelWeights,rows,cols] = getPixelWeights2(x,y,width,height,wholeIm,targetHistogram);
     
     RC = [rows',cols'];
     
@@ -11,4 +11,4 @@
     newPos = sumRC2 ./ sumWeights;
     yN = newPos(1);
     xN = newPos(2);
-%end
+end

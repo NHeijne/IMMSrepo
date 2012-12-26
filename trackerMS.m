@@ -18,12 +18,19 @@ function trackerMS()
   
   [imCellsTarget,histogramTarget] = weightedHist3D(x, y, width, height, im);
   
-  for n = 4%:nrFiles
+  x
+  y
+  width
+  height
+  for n = 4:nrFiles
     im = imread([directory '/' files(n).name]);	
      
     [xNew,yNew] = getNewPos(x,y,width,height,im,histogramTarget)
-    x = x + round(xNew)
-    y = y + round(yNew)
+    x =  (xNew)+x
+    y =  (yNew)+y
+    
+    x=round(x)
+    y=round(y)
     
     im = imPlusDot(im,x,y);
     imshow(im);
