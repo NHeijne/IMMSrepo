@@ -70,7 +70,7 @@ function [imCells,histogram] = weightedHist3D(y,x, width, height, wholeIm, n_,sc
         
    % imshow(uint8(im));
    % pause(1);
-    im;
+    %im;
     
     weightMaskIm =  getWeightMask(im) ;
     
@@ -96,7 +96,7 @@ function [imCells,histogram] = weightedHist3D(y,x, width, height, wholeIm, n_,sc
  		for row = 1:imHeight
  			pixelValue = imCells(row,col,:);
  			frequencies(pixelValue(1),pixelValue(2),pixelValue(3)) = ...
- 				... %weightMaskIm(row,col) * %
+ 				 weightMaskIm(row,col) * ...
                 frequencies(pixelValue(1),pixelValue(2),pixelValue(3)) + 1;
  		end
     end	
