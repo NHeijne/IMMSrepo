@@ -1,4 +1,4 @@
-%function [xN,yN] = getNewPos(x,y,width,height,wholeIm,targetHistogram)
+function [xN,yN] = getNewPos(x,y,width,height,wholeIm,targetHistogram)
 
     [pixelWeights,rows,cols] = getPixelWeights2(x,y,width,height,wholeIm,targetHistogram);
     
@@ -17,8 +17,8 @@
     xN = -1 * newPos(2);
     
    
-    rows = reshape(rows,3,5);
-    cols = reshape(cols,3,5);
+    rows = reshape(rows,height,width);
+    cols = reshape(cols,height,width);
     
     wmR = getWeightMask(rows) .* (rows);
     wmC = getWeightMask(cols) .* (cols);
@@ -28,4 +28,4 @@
     
     iC2 = wmC2 == min(min(wmC2))
     
-%end
+end
