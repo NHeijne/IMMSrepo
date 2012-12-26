@@ -29,6 +29,11 @@ function [pixelWeights,rows,cols] = getPixelWeights2(x,y,width,height,wholeIm,ta
             sqrt( ...
                 targetHistogram(bin(1),bin(2),bin(3)) / histogram(bin(1),bin(2),bin(3))  ...
             );
+        
+        if (isnan(pixelWeights(rows(i),cols(i))))
+            disp('ISNAN')
+            pixelWeights(rows(i),cols(i)) = 0;
+        end
     end
     
     pixelWeights

@@ -16,6 +16,7 @@ function [weightMask] = getWeightMask(im)
   
     h = (1/(2*C_d)) * (d + 2) * (1 - ((X.^2 + Y.^2)/max(max((X.^2 + Y.^2)))));
    
+    %h = h.^2;
     weightMask = h/(sum(sum(h))); %normalise
     weightMask =weightMask';        
         

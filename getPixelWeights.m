@@ -30,7 +30,7 @@ function [pixelWeights,rows,cols] = getPixelWeights(x, y,width,height,wholeIm,ta
     end
 
 
-    pixelWeights 
+    pixelWeights ;
     pixelWeights = reshape(pixelWeights,imSize,1);
     
 end
