@@ -29,19 +29,6 @@ function [pixelWeights,rows,cols] = getPixelWeights(x, y,width,height,wholeIm,ta
             );
     end
 
-%     for hi=1:imHeight
-%         for wj = 1:imWidth
-%             for ni=1:5
-%                 for nj=1:5
-%                     for nk=1:5
-%                         if (imCells(hi,wj) == [ni,nj,nk])
-%                             pixelWeights(hi,wj) = pixelWeights(hi,wj) + sqrt(targetHistogram(ni,nj,nk) / histogram(ni,nj,nk));
-%                         end
-%                     end
-%                 end
-%             end
-%         end
-%     end
 
     pixelWeights 
     pixelWeights = reshape(pixelWeights,imSize,1);
