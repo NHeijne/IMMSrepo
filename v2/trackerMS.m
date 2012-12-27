@@ -66,36 +66,28 @@ function [distance, tElapsed] = trackerMS(x_, y_, width_, height_)
     
     while norm([xOld,yOld] - [x,y]) >= smallestIncrement && counter < limit
     
-    [xNew,yNew] = getNewPos(x,y,width,height,im,histogramTarget);
-    
-    xOld = x;
-    yOld = y;
-    
-    [temp,histogramCandidate1] = weightedHist3D(x, y, width, height, im);
-    
-    x = round(x + (xNew /2));
-    y = round(y + (yNew /2));
-    
-    [temp,histogramCandidate2] = weightedHist3D(x, y, width, height, im);
-    distance(n-3) = bat_distance(histogramCandidate2, histogramTarget);
-    while bat_distance(histogramCandidate1, histogramTarget) < bat_distance(histogramCandidate2, histogramTarget)
-        x = round((x + xOld) /2);
-        y = round((y + yOld) /2);
-        
+        [xNew,yNew] = getNewPos(x,y,width,height,im,histogramTarget);
+
+        xOld = x;
+        yOld = y;
+
+        [temp,histogramCandidate1] = weightedHist3D(x, y, width, height, im);
+
+        x = round(x + (xNew /2));
+        y = round(y + (yNew /2));
+
         [temp,histogramCandidate2] = weightedHist3D(x, y, width, height, im);
         distance(n-3) = bat_distance(histogramCandidate2, histogramTarget);
-    end
-    
-    %norm([xUpdated,yUpdated] - [x,y])
-    
-%     if (norm([xUpdated,yUpdated] - [x,y]) >= smallestIncrement)
-%         x=round(xUpdated)
-%         y=round(yUpdated)
-%     else
-%         disp('NO UPDATE');
+        while bat_distance(histogramCandidate1, histogramTarget) < bat_distance(histogramCandidate2, histogramTarget)
+            x = round((x + xOld) /2);
+            y = round((y + yOld) /2);
+
+            [temp,histogramCandidate2] = weightedHist3D(x, y, width, height, im);
+            distance(n-3) = bat_distance(histogramCandidate2, histogramTarget);
+        end
+
     counter = counter +1;
     end
-%     disp('NO UPDATE');
     
     im = imPlusDot(im,x,y);
     imshow(im);
