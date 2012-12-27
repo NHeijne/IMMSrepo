@@ -102,16 +102,16 @@ function [imCells,histogram] = weightedHist3D(column,row, width, height, wholeIm
 	%% Computing the frequencies
 	frequencies = zeros(n,n,n);  % initialization of vector, which will be used for saving the frequencies
     
- 	for col = 1:imWidth
- 		for row = 1:imHeight
- 			pixelValue = imCells(row,col,:);
+ 	for c = 1:imWidth
+ 		for r = 1:imHeight
+ 			pixelValue = imCells(r,c,:);
  			frequencies(pixelValue(1),pixelValue(2),pixelValue(3)) = ... 				 
                 frequencies(pixelValue(1),pixelValue(2),pixelValue(3)) + ...
-                weightMaskIm(row,col) * ...
+                weightMaskIm(r,c) * ...
                 1;
             %col
             %row
-            %weightMaskIm(row,col)
+            %weightMaskIm(r,c)
  		end
     end	
 

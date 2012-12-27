@@ -44,8 +44,8 @@ function [xNew,yNew] = getNewPos(column,row,width,height,wholeIm,targetHistogram
  %  yNew = wholeY(1)*0.1;
   % xNew = wholeX(1)*0.1;
     
-    yNew = yN ;
-    xNew = xN ;
+    yNew = yN;
+    xNew = xN;
     
    %  yNew = wholeY(1);
    % xNew = wholeX(1);
