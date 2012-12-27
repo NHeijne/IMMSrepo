@@ -15,17 +15,18 @@ function [distance, tElapsed] = trackerMS(x_, y_, width_, height_, cmodel_)
   cmodel= 1;
   
   [imHeight,imWidth,imDim] = size(im)
-  disp('Draw square and double-click');
+ 
   if nargin == 0
+       disp('Draw square and double-click');
       [xmin, ymin, width, height] = getTargetPos(im);
   else if nargin > 4
       xmin = x_;
       ymin = y_;
       width = width_;
-      height = height_;
-      end
+      height = height_;      
   end
-  if nargin == 5
+  
+  if nargin > 5
       cmodel = cmodel_;
   end
   x = xmin + round(width /2);
@@ -42,6 +43,7 @@ function [distance, tElapsed] = trackerMS(x_, y_, width_, height_, cmodel_)
   
   im = imPlusDot(im,x,y);
   imshow (im);
+  pause(0.5);
   
   % output  
   x

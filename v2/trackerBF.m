@@ -1,20 +1,28 @@
-function tracker1(directory) 
+function [distance, tElapsed] =  trackerBF(trackerMS(x_, y_, width_, height_) 
 
   
-  % dir = e.g. '../MoreFrames_part_1/part_1'
+  directory =  '../../MoreFrames_part_1/';
   files = dir(directory);
   nrFiles = size(files,1)-2; % Discard '.' and '..'
   
   im = imread([directory '/' files(3).name]);
   [imHeight,imWidth,imDim] = size(im)
   imshow(im);
-  disp('Give upper left and lower right point of to-be-tracked square');
-  [x,y]=ginput(2);
-  objectHeight = max(y)-min(y);
-  objectWidth = max(x)-min(x);
   
-  trackedObject = im(min(y):max(y), min(x):max(x),:);
-  %imshow(trackedObject);
+  if (nargin == 0)
+      disp('Draw square and double-click');
+      [xmin, ymin, width, height] = getTargetPos(im);
+  else
+      xmin = x_;
+      ymin = y_;
+      width = width_;
+      height = height_;
+  end
+  
+  x = xmin + round(width /2);
+  y = ymin + round(height / 2);
+  trackedObject = im(ymin:ymin+height, min(x):max(x),:);
+
   trackedHist = hist3d(trackedObject); 
   sumhist = sum(sum(sum(trackedHist)));
   normtrackedHist = trackedHist ./ sumhist; % frequencies normalized between 0 and 1
@@ -26,6 +34,10 @@ function tracker1(directory)
   %% Find most similar new window position to the tracked object from previous   
   bestPosI = min(x);
   bestPosJ = min(y);
+  
+  tic;
+  tElapsed = zeros(length(nrFiles)-3);
+  distance = zeros(length(nrFiles)-3);
   for n = 4:nrFiles
     im = imread([directory '/' files(n).name]);	
     maxHistDistance = realmax;
