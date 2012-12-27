@@ -19,8 +19,8 @@ function [xNew,yNew] = getNewPos(column,row,width,height,wholeIm,targetHistogram
     else
         newPos = sumRC2 ./ sumWeights;
     end
-    yN =  newPos(1)
-    xN =  newPos(2)
+    yN =  newPos(1);
+    xN =  newPos(2);
    
    
 %     rows = reshape(rows,height,width)

@@ -31,11 +31,15 @@ function trackerMS()
   
   smallestIncrement = 0.2;
   
+  tic;
+  tElapsed = zeros(length(nrFiles)-3);
+  distance = zeros(length(nrFiles)-3);
   for n = 4:nrFiles
     im = imread([directory '/' files(n).name]);	
     
-    [xNew,yNew] = getNewPos(x,y,width,height,im,histogramTarget);
+    tStart = tic;
     
+    [xNew,yNew] = getNewPos(x,y,width,height,im,histogramTarget);
     
     xUpdated =  (xNew)+x;
     yUpdated =  (yNew)+y;
@@ -73,8 +77,13 @@ function trackerMS()
     
     im = imPlusDot(im,x,y);
     imshow(im);
+    tElapsed(n-3) = toc(tStart);
     pause(0.001);
-
+    [imCellsC,histogramCandidate] = weightedHist3D(x, y, width, height, im);
+    distance(n-3) = bat_distance(histogramCandidate, histogramTarget);
   end
-
+    distance'
+    averageDistance = sum(distance')/length(distance)
+    tElapsed'
+    averageTime = sum(tElapsed')/length(tElapsed)
 end
