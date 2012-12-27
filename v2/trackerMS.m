@@ -1,4 +1,4 @@
-function [distance, tElapsed] = trackerMS() 
+function [distance, tElapsed] = trackerMS(x_, y_, width_, height_) 
 
   
   directory = '../../MoreFrames_part_1/';
@@ -7,20 +7,31 @@ function [distance, tElapsed] = trackerMS()
   nrFiles = size(files,1)-2; % Discard '.' and '..'
   
   im = imread([directory '/' files(3).name]);
+
+  xmin= 0; 
+  ymin= 0; 
+  width= 0; 
+  height= 0;
   
   [imHeight,imWidth,imDim] = size(im)
   disp('Draw square and double-click');
-  [xmin, ymin, width, height] = getTargetPos(im)
+  if nargin == 0
+      [xmin, ymin, width, height] = getTargetPos(im);
+  else
+      xmin = x_;
+      ymin = y_;
+      width = width_;
+      height = height_;
+  end
   x = xmin + round(width /2);
   y = ymin + round(height / 2);
   
-  column = x;
-  row = y;
-  [imCellsTarget,histogramTarget] = weightedHist3D(column, row, width, height, im);
+
+  [imCellsTarget,histogramTarget] = weightedHist3D(x, y, width, height, im);
   
   
   
-  im = imPlusDot(im,column,row);
+  im = imPlusDot(im,x,y);
   imshow (im);
   
   % output  
