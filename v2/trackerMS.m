@@ -1,7 +1,7 @@
 function [distance, tElapsed] = trackerMS(x_, y_, width_, height_, cmodel_) 
 
   
-  directory = '/run/media/root/ss-ntfs/3.Documents/huiswerk_20122013/IMMS/KiwiS1_lfr';
+  directory = 'L:\3.Documents\huiswerk_20122013\IMMS\KiwiS2_lfr';
  % directory =  '../../MoreFrames_part_1/';
   files = dir(directory);
   nrFiles = size(files,1)-2; % Discard '.' and '..'
