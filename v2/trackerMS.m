@@ -37,8 +37,8 @@ function trackerMS()
     [xNew,yNew] = getNewPos(column,row,width,height,im,histogramTarget)
     
     
-    xUpdated =  (xNew)%+x;
-    yUpdated =  (yNew)%+y;
+    xUpdated =  (xNew)+x;
+    yUpdated =  (yNew)+y;
     
     %norm([xUpdated,yUpdated] - [x,y])
     
