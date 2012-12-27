@@ -1,8 +1,8 @@
-function [distance, tElapsed] = trackerMS(x_, y_, width_, height_, cmodel_) 
+function [distance, tElapsed] = trackerMSb(x_, y_, width_, height_, cmodel_) 
 
   
-  directory = '/run/media/root/ss-ntfs/3.Documents/huiswerk_20122013/IMMS/KiwiS1_lfr';
- % directory =  '../../MoreFrames_part_1/';
+  directory = '../../AllFrames/';
+  %directory = '../../TestFrames1/' ;
   files = dir(directory);
   nrFiles = size(files,1)-2; % Discard '.' and '..'
   
@@ -47,13 +47,10 @@ function [distance, tElapsed] = trackerMS(x_, y_, width_, height_, cmodel_)
   pause(0.5);
   
   % output  
-  xmin
-  ymin
+  x
+  y
   width
   height
-  
-  
-  
   
   smallestIncrement = 0.2;
   
@@ -84,9 +81,6 @@ function [distance, tElapsed] = trackerMS(x_, y_, width_, height_, cmodel_)
     counter = 1;
     limit = 10;
     
-    [temp,histogramCandidate] = weightedHist3D(x, y, width, height, im);
-    distance(n-3) = bat_distance(histogramCandidate, histogramTarget);
-    
     while norm([xOld,yOld] - [x,y]) >= smallestIncrement && counter < limit
     
         [xNew,yNew] = getNewPos(x,y,width,height,im,histogramTarget);
@@ -94,35 +88,29 @@ function [distance, tElapsed] = trackerMS(x_, y_, width_, height_, cmodel_)
         xOld = x;
         yOld = y;
 
-        [temp,histogramCandidate1] = weightedHist3D(x, y, width, height, im);
+        x1 = round(x + (xNew));
+        y1 = round(y + (yNew));
 
-        x = round(x + (xNew));
-        y = round(y + (yNew));
+        [temp,histogramCandidate1] = weightedHist3D(x1, y1, width, height, im);
 
-        [temp,histogramCandidate2] = weightedHist3D(x, y, width, height, im);
-        distance(n-3) = bat_distance(histogramCandidate2, histogramTarget);
-        halfwaycount = 0;
-        bestcount = halfwaycount;
-        bestDistance = distance(n-3);
-        while bat_distance(histogramCandidate1, histogramTarget) < bat_distance(histogramCandidate2, histogramTarget) && halfwaycount < 5
-            x = round((x + xOld) /2);
-            y = round((y + yOld) /2);
+        x2 = round(x + (xNew /2));
+        y2 = round(y + (yNew /2));
 
-            [temp,histogramCandidate2] = weightedHist3D(x, y, width, height, im);
-            distance(n-3) = bat_distance(histogramCandidate2, histogramTarget);
-            halfwaycount = halfwaycount+1;
-            if distance(n-3) < bestDistance
-                bestDistance = distance(n-3);
-                bestcount = halfwaycount;
-            end
-        end
+        [temp,histogramCandidate2] = weightedHist3D(x2, y2, width, height, im);
         
-        if halfwaycount == 5
-            x = round(x+(xNew) / power(2,bestcount));
-            y = round(y+(yNew) / power(2,bestcount));
-        end
+        if bat_distance(histogramCandidate1, histogramTarget) > bat_distance(histogramCandidate2, histogramTarget)
+            % second (halfway) is smaller
+            distance(n-3) = bat_distance(histogramCandidate2, histogramTarget);
+            x= x2;
+            y = y2;
+        else
+            distance(n-3) = bat_distance(histogramCandidate1, histogramTarget);            
+            x = x1;
+            x = x2;
+        end        
 
     counter = counter +1;
+    
     end
     
     im = imPlusDot(im,x,y);

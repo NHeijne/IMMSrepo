@@ -69,12 +69,9 @@ function [imCells,histogram] = weightedHist3D(column,row, width, height, wholeIm
     
     partIm = wholeIm(minRowsWholeIm:maxRowsWholeIm,minColumnsWholeIm:maxColumnsWholeIm,:) ;
     
-    if (sum(size(partIm)) == 0)
-        avgChannels = [128,128,128];
-        avgChannels =  reshape(avgChannels,1,1,3);
-    else
-     avgChannels =  mean(mean(partIm,1)); % mean of R, G and B
-    end
+    if (sum(size(partIm)))
+    avgChannels =  mean(mean(partIm,1)); % mean of R, G and B
+    
     
     
     im = zeros(height, width,3);
@@ -104,7 +101,6 @@ function [imCells,histogram] = weightedHist3D(column,row, width, height, wholeIm
     
  	imCells = ceil(im/step); % each pixel gets a number denoting cell (cell is 3D thing)
   	imCells(imCells==0) = 1; % cell_no can be computed as 0, so we assing them to the first cell
-    imCells(isnan(imCells)) = 1;
 	% imshow(imCells/n);
 
 	%% Computing the frequencies

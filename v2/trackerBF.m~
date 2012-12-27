@@ -1,7 +1,7 @@
 function [distance, tElapsed] =  trackerBF(x_, y_, width_, height_, cmodel_) 
 
   
-  directory = '/run/media/root/ss-ntfs/3.Documents/huiswerk_20122013/IMMS/KiwiS2_lfr';
+  directory =  '../../AllFrames/';
   files = dir(directory);
   nrFiles = size(files,1)-2; % Discard '.' and '..'
   
@@ -38,11 +38,6 @@ function [distance, tElapsed] =  trackerBF(x_, y_, width_, height_, cmodel_)
   objectHeight = height;
   objectWidth = width;
   trackedObject = im(ymin:ymin+height,xmin:xmin+width,:);
-  
-  xmin
-  ymin
-  width
-  height
   
 
   [imCellsTarget,targetHist] = weightedHist3D(x, y, width, height, im);

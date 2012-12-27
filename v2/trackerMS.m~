@@ -25,7 +25,7 @@ function [distance, tElapsed] = trackerMS(x_, y_, width_, height_, cmodel_)
       width = width_;
       height = height_;      
       end
-  end
+      endhelpwin tic
   
   if nargin == 5
       cmodel = cmodel_;

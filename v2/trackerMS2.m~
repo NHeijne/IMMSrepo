@@ -85,23 +85,30 @@ function [distance, tElapsed] = trackerMS2(x_, y_, width_, height_, cmodel_)
     
         [xNew,yNew] = getNewPos(x,y,width,height,im,histogramTarget);
 
-        xOld = x;
-        yOld = y;
+        x1 = round(x + (xNew));
+        y1 = round(y + (yNew));
 
-        [temp,histogramCandidate1] = weightedHist3D(x, y, width, height, im);
+        [temp,histogramCandidate1] = weightedHist3D(x1, y1, width, height, im);
 
-        x = round(x + (xNew /2));
-        y = round(y + (yNew /2));
+        x2 = round(x + (xNew /2));
+        y2 = round(y + (yNew /2));
+
+        [temp,histogramCandidate2] = weightedHist3D(x2, y2, width, height, im);
+        
+        if (bat_distance(histogramCandidate1, histogramTarget) > bat_distance(histogramCandidate2, histogramTarget)
+            distance(n-3) = bat_distance(histogramCandidate2, histogramTarget);
+            x= x2;
+            y = y2;
+        else
+            x = x1;
+            x = x2;
+        end
+        x = round((x + xOld) /2);
+        y = round((y + yOld) /2);
 
         [temp,histogramCandidate2] = weightedHist3D(x, y, width, height, im);
         distance(n-3) = bat_distance(histogramCandidate2, histogramTarget);
-        while bat_distance(histogramCandidate1, histogramTarget) < bat_distance(histogramCandidate2, histogramTarget)
-            x = round((x + xOld) /2);
-            y = round((y + yOld) /2);
 
-            [temp,histogramCandidate2] = weightedHist3D(x, y, width, height, im);
-            distance(n-3) = bat_distance(histogramCandidate2, histogramTarget);
-        end
 
     counter = counter +1;
     end
