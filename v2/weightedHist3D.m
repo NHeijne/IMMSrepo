@@ -1,4 +1,4 @@
-function [imCells,histogram] = weightedHist3D(x,y, width, height, wholeIm, n_,scaleFactor_)
+function [imCells,histogram] = weightedHist3D(column,row, width, height, wholeIm, n_,scaleFactor_)
 % values of wholeIm should be in [0,1] or [1,255]
 
 	%% set default number of bins if that number is not provided    
@@ -18,57 +18,57 @@ function [imCells,histogram] = weightedHist3D(x,y, width, height, wholeIm, n_,sc
     [wholeImHeight,wholeImWidth,imDim] = size(wholeIm);
     widthHalf = floor(width / 2);
     heightHalf = floor(height / 2);
-    startX  = x - widthHalf;
-    startY = y - heightHalf;
-    endX = x + widthHalf;
+    startColumn  = column - widthHalf;
+    startRow = row - heightHalf;
+    endColumn = column + widthHalf;
     if ((mod(width,2)) == 0 ) 
-        endX = endX - 1;
+        endColumn = endColumn - 1;
     end
-    endY = y + heightHalf;
+    endRow = row + heightHalf;
     if ((mod(height,2)) == 0 ) 
-        endY = endY - 1;
+        endRow = endRow - 1;
     end
-%     startX
-%     startY
-%     endX
-%     endY
+%     startColumn
+%     startRow
+%     endColumn
+%     endRow
 %     
-    minXWholeIm= max(startX,1);
-    minYWholeIm = max(startY,1);
-    maxYWholeIm= min(endY,wholeImHeight);
-    maxXWholeIm = min(endX,wholeImWidth);
+    minColumnsWholeIm= max(startColumn,1);
+    minRowsWholeIm = max(startRow,1);
+    maxRowsWholeIm= min(endRow,wholeImHeight);
+    maxColumnsWholeIm = min(endColumn,wholeImWidth);
     
     %IF...
-    if (startX < minXWholeIm)
-        sWidth = width - (maxXWholeIm - minXWholeIm);
+    if (startColumn < minColumnsWholeIm)
+        sWidth = width - (maxColumnsWholeIm - minColumnsWholeIm);
     else
         sWidth = 1;
     end
-    if (startY < minYWholeIm)
-        sHeight = height - (maxYWholeIm - minYWholeIm);
+    if (startRow < minRowsWholeIm)
+        sHeight = height - (maxRowsWholeIm - minRowsWholeIm);
     else
         sHeight=1;
     end
-    if (endX > maxXWholeIm)
-        eWidth = (maxXWholeIm - minXWholeIm)+1;
+    if (endColumn > maxColumnsWholeIm)
+        eWidth = (maxColumnsWholeIm - minColumnsWholeIm)+1;
     else
         eWidth = width;
     end
-    if (endY > maxYWholeIm)
-        eHeight = (maxYWholeIm - minYWholeIm)+1;
+    if (endRow > maxRowsWholeIm)
+        eHeight = (maxRowsWholeIm - minRowsWholeIm)+1;
     else
         eHeight = height;
     end
     
-    minYWholeIm
-    maxYWholeIm
-    minXWholeIm
-    maxXWholeIm
+    minRowsWholeIm
+    maxRowsWholeIm
+    minColumnsWholeIm
+    maxColumnsWholeIm
     
     
     
-    partIm = wholeIm(minYWholeIm:maxYWholeIm,minXWholeIm:maxXWholeIm,:) 
-    avgChannels =  mean(mean(partIm,1)) % mean of R, G and B
+    partIm = wholeIm(minRowsWholeIm:maxRowsWholeIm,minColumnsWholeIm:maxColumnsWholeIm,:) ;
+    avgChannels =  mean(mean(partIm,1)); % mean of R, G and B
     
     im = zeros(height, width,3);
     im(1:height, 1:width,:) = repmat(avgChannels,height,width);
@@ -76,15 +76,15 @@ function [imCells,histogram] = weightedHist3D(x,y, width, height, wholeIm, n_,sc
         
     
     
-   % imshow(uint8(im));
-   % pause(1);
+    %imshow(uint8(im));
+    %pause(0.5);
     %im
     
     weightMaskIm =  getWeightMask(im) ;
     
-	[imHeight,imWidth,imDim] = size(im)
+	[imHeight,imWidth,imDim] = size(im);
 
-    return
+    %return
     
     %im2double takes the intensity
  	im = im2double(im); % convert to interval [0,1]
@@ -105,12 +105,17 @@ function [imCells,histogram] = weightedHist3D(x,y, width, height, wholeIm, n_,sc
  	for col = 1:imWidth
  		for row = 1:imHeight
  			pixelValue = imCells(row,col,:);
- 			frequencies(pixelValue(1),pixelValue(2),pixelValue(3)) = ...
- 				 weightMaskIm(row,col) * ...
-                frequencies(pixelValue(1),pixelValue(2),pixelValue(3)) + 1;
+ 			frequencies(pixelValue(1),pixelValue(2),pixelValue(3)) = ... 				 
+                frequencies(pixelValue(1),pixelValue(2),pixelValue(3)) + ...
+                weightMaskIm(row,col) * ...
+                1;
+            col;
+            row;
+            weightMaskIm(row,col);
  		end
     end	
 
+   % frequencies
      sumFrequencies = sum(sum(sum(frequencies)));
      frequencies = frequencies ./ sumFrequencies;
      histogram = frequencies;

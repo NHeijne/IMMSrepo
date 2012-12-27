@@ -22,7 +22,7 @@ function [weightMask] = getWeightMask(im, normalise)
    
     %h = h.^2;
     weightMask = h;
-    if (normalise)
+    if (normalise == 1)
         weightMask = weightMask /(sum(sum(h))); %normalise
     end
     weightMask =weightMask';        

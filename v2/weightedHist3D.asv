@@ -1,4 +1,4 @@
-function [imCells,histogram] = weightedHist3D(x,y, width, height, wholeIm, n_,scaleFactor_)
+function [imCells,histogram] = weightedHist3D(column,row, width, height, wholeIm, n_,scaleFactor_)
 % values of wholeIm should be in [0,1] or [1,255]
 
 	%% set default number of bins if that number is not provided    
@@ -18,43 +18,43 @@ function [imCells,histogram] = weightedHist3D(x,y, width, height, wholeIm, n_,sc
     [wholeImHeight,wholeImWidth,imDim] = size(wholeIm);
     widthHalf = floor(width / 2);
     heightHalf = floor(height / 2);
-    startX  = x - widthHalf;
-    startY = y - heightHalf;
-    endX = x + widthHalf;
+    startColumn  = column - widthHalf;
+    startRow = row - heightHalf;
+    endColumn = column + widthHalf;
     if ((mod(width,2)) == 0 ) 
-        endX = endX - 1;
+        endColumn = endColumn - 1;
     end
-    endY = y + heightHalf;
+    endRow = row + heightHalf;
     if ((mod(height,2)) == 0 ) 
-        endY = endY - 1;
+        endRow = endRow - 1;
     end
-%     startX
-%     startY
-%     endX
-%     endY
+%     startColumn
+%     startRow
+%     endColumn
+%     endRow
 %     
-    minXWholeIm= max(startX,1);
-    minYWholeIm = max(startY,1);
-    maxYWholeIm= min(endY,wholeImHeight);
-    maxXWholeIm = min(endX,wholeImWidth);
+    minXWholeIm= max(startColumn,1);
+    minYWholeIm = max(startRow,1);
+    maxYWholeIm= min(endRow,wholeImHeight);
+    maxXWholeIm = min(endColumn,wholeImWidth);
     
     %IF...
-    if (startX < minXWholeIm)
+    if (startColumn < minXWholeIm)
         sWidth = width - (maxXWholeIm - minXWholeIm);
     else
         sWidth = 1;
     end
-    if (startY < minYWholeIm)
+    if (startRow < minYWholeIm)
         sHeight = height - (maxYWholeIm - minYWholeIm);
     else
         sHeight=1;
     end
-    if (endX > maxXWholeIm)
+    if (endColumn > maxXWholeIm)
         eWidth = (maxXWholeIm - minXWholeIm)+1;
     else
         eWidth = width;
     end
-    if (endY > maxYWholeIm)
+    if (endRow > maxYWholeIm)
         eHeight = (maxYWholeIm - minYWholeIm)+1;
     else
         eHeight = height;
@@ -67,8 +67,8 @@ function [imCells,histogram] = weightedHist3D(x,y, width, height, wholeIm, n_,sc
     
     
     
-    partIm = wholeIm(minYWholeIm:maxYWholeIm,minXWholeIm:maxXWholeIm,:) 
-    avgChannels =  mean(mean(partIm,1)) % mean of R, G and B
+    partIm = wholeIm(minYWholeIm:maxYWholeIm,minXWholeIm:maxXWholeIm,:) ;
+    avgChannels =  mean(mean(partIm,1)); % mean of R, G and B
     
     im = zeros(height, width,3);
     im(1:height, 1:width,:) = repmat(avgChannels,height,width);

@@ -1,6 +1,6 @@
-function [pixelWeights,rows,cols] = getPixelWeights2(x,y,width,height,wholeIm,targetHistogram)
+function [pixelWeights,rows,cols] = getPixelWeights2(column,row,width,height,wholeIm,targetHistogram)
 
-    [imCells,histogram] = weightedHist3D(x,y, width, height, wholeIm);
+    [imCells,histogram] = weightedHist3D(column,row, width, height, wholeIm);
     
     %histogram
     %imCells
@@ -30,8 +30,8 @@ function [pixelWeights,rows,cols] = getPixelWeights2(x,y,width,height,wholeIm,ta
                 targetHistogram(bin(1),bin(2),bin(3)) / histogram(bin(1),bin(2),bin(3))  ...
             );
         
-        if (isnan(pixelWeights(rows(i),cols(i))))
-            disp('ISNAN')
+        if (isnan(pixelWeights(rows(i),cols(i))) || pixelWeights(rows(i),cols(i)) == Inf)
+            disp('is NaN or is Inf')
             pixelWeights(rows(i),cols(i)) = 0;
         end
     end
@@ -39,7 +39,7 @@ function [pixelWeights,rows,cols] = getPixelWeights2(x,y,width,height,wholeIm,ta
     %pixelWeights
     pixelWeights = reshape(pixelWeights,imSize,1);
     
-     [X,Y] = meshgrid(-(height-1)/2:(height-1)/2, -(width-1)/2:(width-1)/2);
-     rows = reshape(X',1,imSize);
-     cols = reshape(Y',1,imSize);
+     [Xi,Yi] = meshgrid(-(height-1)/2:(height-1)/2, -(width-1)/2:(width-1)/2);
+     rows = reshape(Xi',1,imSize);
+     cols = reshape(Yi',1,imSize);
 end
