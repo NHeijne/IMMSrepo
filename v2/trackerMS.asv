@@ -1,43 +1,82 @@
 function trackerMS() 
 
   
-  directory = '../MoreFrames_part_1/part_1';
+  directory = '../../MoreFrames_part_1/';
+  %directory = '../../TestFrames1/' ;
   files = dir(directory);
   nrFiles = size(files,1)-2; % Discard '.' and '..'
   
   im = imread([directory '/' files(3).name]);
+  
   [imHeight,imWidth,imDim] = size(im)
   disp('Draw square and double-click');
   [xmin, ymin, width, height] = getTargetPos(im)
-  x = xmin + ceil(width /2)
-  y = ymin + ceil(height / 2)
+  x = xmin + round(width /2);
+  y = ymin + round(height / 2);
   
-  colorO = [1,1,1];
-  colorI = [255,1,1];
-  colorO = reshape(colorO,1,1,3);
-  colorI = reshape(colorI,1,1,3);
+  column = x;
+  row = y;
+  [imCellsTarget,histogramTarget] = weightedHist3D(column, row, width, height, im);
+  
+  
+  
+  im = imPlusDot(im,column,row);
+  imshow (im);
+  
+  % output  
+  x
+  y
+  width
+  height
+  
+  smallestIncrement = 0.2;
+  
+  for n = 4:nrFiles
+    im = imread([directory '/' files(n).name]);	
+    
+    [xNew,yNew] = getNewPos(x,y,width,height,im,histogramTarget)
+    
+    
+    xUpdated =  (xNew)+x;
+    yUpdated =  (yNew)+y;
+    
+    x=round(xUpdated)
+    y=round(yUpdated)
+    
+    counter = 1;
+    limit = 10;
+    
+    while norm([xUpdated,yUpdated] - [x,y]) >= smallestIncrement && counter < limit
+    
+    [xNew,yNew] = getNewPos(x,y,width,height,im,histogramTarget);
+    
+    if counter < limit -1
+        xHalfway = round(x + (xNew /2));
+        yHalfway = round(y + (yNew /2));
+    end
+    
+    xUpdated =  (xNew)+x;
+    yUpdated =  (yNew)+y;
+    
+    x=round(xUpdated)
+    y=round(yUpdated)
+    
+    
+    %norm([xUpdated,yUpdated] - [x,y])
+    
+%     if (norm([xUpdated,yUpdated] - [x,y]) >= smallestIncrement)
+%         x=round(xUpdated)
+%         y=round(yUpdated)
+%     else
+%         disp('NO UPDATE');
+    counter = counter +1;
+    end
+    disp('NO UPDATE');
+    
+    im = imPlusDot(im,x,y);
+    imshow(im);
+    pause(0.001);
 
-  dotInterval=3;
-  colorMO = repmat(colorO,dotInterval*2+1,dotInterval*2+1);
-  colorMI = repmat(colorI,dotInterval*2-1,dotInterval*2-1);
-  im(y-dotInterval:y+dotInterval,x-dotInterval:x+dotInterval,:) = colorMO;
-  im(y-dotInterval+1:y+dotInterval-1,x-dotInterval+1:x+dotInterval-1,:) = colorMI;
-  imshow (im)
-  
-  
-%\   for n = 4:nrFiles
-%     im = imread([directory '/' files(n).name]);	
-%     maxHistDistance = realmax;
-% 	bestObject = zeros(objectHeight, objectWidth);
-%     
-%     
-%     
-% 	im(bestPosJ:maxHeight, bestPosI,:) = 0;
-% 	im(bestPosJ,bestPosI:maxWidth,:) = 0;
-% 	im(maxHeight,bestPosI:maxWidth,:) = 0;
-% 	im(bestPosJ:maxHeight,maxWidth,:) = 0;
-%  	imshow(im);
-%  	pause(0.001);
-%   end
+  end
 
 end

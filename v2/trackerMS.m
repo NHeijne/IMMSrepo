@@ -1,8 +1,8 @@
 function trackerMS() 
 
   
-  %directory = '../../MoreFrames_part_1';
-  directory = '../../TestFrames1/' ;
+  directory = '../../MoreFrames_part_1/';
+  %directory = '../../TestFrames1/' ;
   files = dir(directory);
   nrFiles = size(files,1)-2; % Discard '.' and '..'
   
@@ -29,25 +29,47 @@ function trackerMS()
   width
   height
   
-  smallestIncrement = 0.0001;
+  smallestIncrement = 0.2;
   
   for n = 4:nrFiles
     im = imread([directory '/' files(n).name]);	
-     
-    [xNew,yNew] = getNewPos(column,row,width,height,im,histogramTarget)
+    
+    [xNew,yNew] = getNewPos(x,y,width,height,im,histogramTarget);
     
     
     xUpdated =  (xNew)+x;
     yUpdated =  (yNew)+y;
     
+    x=round(xUpdated);
+    y=round(yUpdated);
+    
+    counter = 1;
+    limit = 5;
+    
+    while norm([xUpdated,yUpdated] - [x,y]) >= smallestIncrement && counter < limit
+    
+    [xNew,yNew] = getNewPos(x,y,width,height,im,histogramTarget);
+    
+    if counter < limit -1
+        xUpdated =  (xNew)+x;
+        yUpdated =  (yNew)+y;
+    
+        x=round(xUpdated);
+        y=round(yUpdated);
+    else
+        x = round(x + (xNew /2));
+        y = round(y + (yNew /2));
+    end
     %norm([xUpdated,yUpdated] - [x,y])
     
-    if (norm([xUpdated,yUpdated] - [x,y]) >= smallestIncrement)
-        x=round(xUpdated)
-        y=round(yUpdated)
-    else
-        disp('NO UPDATE');
+%     if (norm([xUpdated,yUpdated] - [x,y]) >= smallestIncrement)
+%         x=round(xUpdated)
+%         y=round(yUpdated)
+%     else
+%         disp('NO UPDATE');
+    counter = counter +1;
     end
+%     disp('NO UPDATE');
     
     im = imPlusDot(im,x,y);
     imshow(im);
