@@ -1,4 +1,4 @@
-function [distance, tElapsed] =  trackerBF(trackerMS(x_, y_, width_, height_) 
+function [distance, tElapsed] =  trackerBF(x_, y_, width_, height_, cmodel_) 
 
   
   directory =  '../../MoreFrames_part_1/';
@@ -8,6 +8,12 @@ function [distance, tElapsed] =  trackerBF(trackerMS(x_, y_, width_, height_)
   im = imread([directory '/' files(3).name]);
   [imHeight,imWidth,imDim] = size(im)
   imshow(im);
+  
+  xmin= 0; 
+  ymin= 0; 
+  width= 0; 
+  height= 0;
+  cmodel= 1;
   
   if (nargin == 0)
       disp('Draw square and double-click');
@@ -19,18 +25,35 @@ function [distance, tElapsed] =  trackerBF(trackerMS(x_, y_, width_, height_)
       height = height_;
   end
   
+   if nargin == 5
+      cmodel = cmodel_;
+   end
+   if cmodel == 2
+       im = RGB_rgb(im); 
+       im = uint8(im.*255);
+   end
+  
   x = xmin + round(width /2);
   y = ymin + round(height / 2);
-  trackedObject = im(ymin:ymin+height, min(x):max(x),:);
+  objectHeight = height;
+  objectWidth = width;
+  trackedObject = im(ymin:ymin+height,xmin:xmin+width,:);
+  
 
-  trackedHist = hist3d(trackedObject); 
-  sumhist = sum(sum(sum(trackedHist)));
-  normtrackedHist = trackedHist ./ sumhist; % frequencies normalized between 0 and 1
+  [imCellsTarget,targetHist] = weightedHist3D(x, y, width, height, im);
+  
+  
   searchWindowHeight = round(objectHeight/2); % pixels
   searchWindowWidth = round(objectWidth/2);
   
-  interval=5;
-  updateObject = 0;
+  
+  
+  im = imPlusDot(im,x,y);
+  imshow(im);
+  
+  
+  interval=1;
+
   %% Find most similar new window position to the tracked object from previous   
   bestPosI = min(x);
   bestPosJ = min(y);
@@ -38,67 +61,62 @@ function [distance, tElapsed] =  trackerBF(trackerMS(x_, y_, width_, height_)
   tic;
   tElapsed = zeros(length(nrFiles)-3);
   distance = zeros(length(nrFiles)-3);
+  
   for n = 4:nrFiles
+      
+    tStart = tic;
+       
     im = imread([directory '/' files(n).name]);	
+    if cmodel == 2
+       im = RGB_rgb(im);
+       im = uint8(im.*255);
+    end
     maxHistDistance = realmax;
-	bestObject = zeros(objectHeight, objectWidth);
+	
     
-    for i = max(1, (bestPosI - searchWindowWidth)) : interval : min(imWidth, bestPosI + searchWindowWidth)
-		for j = max (1, bestPosJ - searchWindowHeight) : interval : min(imHeight, bestPosJ + searchWindowHeight)
+    for i = max(1, (bestPosI - searchWindowWidth)) : interval : min(imWidth, bestPosI + searchWindowWidth) % xmin
+		for j = max (1, bestPosJ - searchWindowHeight) : interval : min(imHeight, bestPosJ + searchWindowHeight) % ymin
 			
-            maxHeightObject = min(j+objectHeight,imHeight);
-            maxWidthObject = min(i+objectWidth,imWidth);
-			possibleObject = im(j:maxHeightObject, i:maxWidthObject,:);
-            fillEmptyValue = 0;
-            % set pixels outside of image to be 'fillEmptyValue'
-            possibleObject(maxHeightObject+1:objectHeight, maxWidthObject+1:objectWidth) = fillEmptyValue;
+             x = i + round(width /2);
+             y = j + round(height / 2);
+            [imCellsTarget,trackedHist] = weightedHist3D(x, y, width, height, im);
                         
-            trackedHist = hist3d(possibleObject);
-            sumhist = sum(sum(sum(trackedHist)));
-            normtrackedHist2 = trackedHist ./ sumhist;
+            dist = bat_distance(targetHist, trackedHist);
+            distance(n-3) = dist;
             
-            dist = bat_distance(normtrackedHist, normtrackedHist2);
-            			
  			if (dist <= maxHistDistance) 
  				maxHistDistance = dist;
                 bestPosI = i;
-				bestPosJ = j;
-                bestObject = possibleObject;
+				bestPosJ = j;                
 			end
 		end
     end
+    
+    tElapsed(n-3) = toc(tStart);
     	
     n
 	bestPosJ
 	bestPosI
 	
     
-	
-	maxHeight = min(imHeight, bestPosJ+objectHeight);
+    % showen
+    maxHeight = min(imHeight, bestPosJ+objectHeight);
     maxWidth = min(imWidth, bestPosI+objectWidth);
-    % update target object
-    if (updateObject == 1)
-
-%         trackedObject = im(bestPosJ:maxHeight, bestPosI:maxWidth,:);
-%         fillEmptyValue = 0;
-%         % set pixels outside of image to be 'fillEmptyValue'
-%         trackedObject(maxHeight+1:objectHeight, maxWidth+1:objectWidth) = fillEmptyValue;
-       
-        trackedObject = bestObject;
-        trackedHist = hist3d(trackedObject); % frequencies normalized between 0 and 1
-        sumhist = sum(sum(sum(trackedHist)));
-        normtrackedHist = trackedHist ./ sumhist;
-        imshow(bestObject);
-        pause(1);
-        
-    end
     
-	im(bestPosJ:maxHeight, bestPosI,:) = 0;
+    im(bestPosJ:maxHeight, bestPosI,:) = 0;
 	im(bestPosJ,bestPosI:maxWidth,:) = 0;
 	im(maxHeight,bestPosI:maxWidth,:) = 0;
 	im(bestPosJ:maxHeight,maxWidth,:) = 0;
+    
+	x = bestPosI + round(width /2);
+    y = bestPosJ + round(height / 2);      
+	im = imPlusDot(im,x,y);
  	imshow(im);
  	pause(0.001);
+    
   end
+  
+   distance = distance';
+   tElapsed = tElapsed';
 
 end
