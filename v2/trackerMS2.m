@@ -1,8 +1,8 @@
-function [distance, tElapsed] = trackerMS(x_, y_, width_, height_, cmodel_) 
+function [distance, tElapsed] = trackerMS2(x_, y_, width_, height_, cmodel_) 
 
   
- % directory = '../../AllFrames/';
-  directory =  '../../MoreFrames_part_1/';
+  directory = '../../MoreFrames_part_1/';
+  %directory = '../../TestFrames1/' ;
   files = dir(directory);
   nrFiles = size(files,1)-2; % Discard '.' and '..'
   
@@ -90,12 +90,11 @@ function [distance, tElapsed] = trackerMS(x_, y_, width_, height_, cmodel_)
 
         [temp,histogramCandidate1] = weightedHist3D(x, y, width, height, im);
 
-        x = round(x + (xNew));
-        y = round(y + (yNew));
+        x = round(x + (xNew /2));
+        y = round(y + (yNew /2));
 
         [temp,histogramCandidate2] = weightedHist3D(x, y, width, height, im);
         distance(n-3) = bat_distance(histogramCandidate2, histogramTarget);
-        
         while bat_distance(histogramCandidate1, histogramTarget) < bat_distance(histogramCandidate2, histogramTarget)
             x = round((x + xOld) /2);
             y = round((y + yOld) /2);
