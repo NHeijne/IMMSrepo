@@ -1,4 +1,4 @@
-function trackerMS() 
+function [distance, tElapsed] = trackerMS() 
 
   
   directory = '../../MoreFrames_part_1/';
@@ -41,6 +41,9 @@ function trackerMS()
     
     [xNew,yNew] = getNewPos(x,y,width,height,im,histogramTarget);
     
+    xOld = x;
+    yOld = y;
+    
     xUpdated =  (xNew)+x;
     yUpdated =  (yNew)+y;
     
@@ -48,22 +51,30 @@ function trackerMS()
     y=round(yUpdated);
     
     counter = 1;
-    limit = 5;
+    limit = 10;
     
-    while norm([xUpdated,yUpdated] - [x,y]) >= smallestIncrement && counter < limit
+    while norm([xOld,yOld] - [x,y]) >= smallestIncrement && counter < limit
     
     [xNew,yNew] = getNewPos(x,y,width,height,im,histogramTarget);
     
-    if counter < limit -1
-        xUpdated =  (xNew)+x;
-        yUpdated =  (yNew)+y;
+    xOld = x;
+    yOld = y;
     
-        x=round(xUpdated);
-        y=round(yUpdated);
-    else
-        x = round(x + (xNew /2));
-        y = round(y + (yNew /2));
+    [temp,histogramCandidate1] = weightedHist3D(x, y, width, height, im);
+    
+    x = round(x + (xNew /2));
+    y = round(y + (yNew /2));
+    
+    [temp,histogramCandidate2] = weightedHist3D(x, y, width, height, im);
+    distance(n-3) = bat_distance(histogramCandidate2, histogramTarget);
+    while bat_distance(histogramCandidate1, histogramTarget) < bat_distance(histogramCandidate2, histogramTarget)
+        x = round((x + xOld) /2);
+        y = round((y + yOld) /2);
+        
+        [temp,histogramCandidate2] = weightedHist3D(x, y, width, height, im);
+        distance(n-3) = bat_distance(histogramCandidate2, histogramTarget);
     end
+    
     %norm([xUpdated,yUpdated] - [x,y])
     
 %     if (norm([xUpdated,yUpdated] - [x,y]) >= smallestIncrement)
@@ -79,11 +90,7 @@ function trackerMS()
     imshow(im);
     tElapsed(n-3) = toc(tStart);
     pause(0.001);
-    [imCellsC,histogramCandidate] = weightedHist3D(x, y, width, height, im);
-    distance(n-3) = bat_distance(histogramCandidate, histogramTarget);
   end
-    distance'
-    averageDistance = sum(distance')/length(distance)
-    tElapsed'
-    averageTime = sum(tElapsed')/length(tElapsed)
+    distance = distance';
+    tElapsed = tElapsed';
 end
