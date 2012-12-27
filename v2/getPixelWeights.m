@@ -3,7 +3,7 @@ function [pixelWeights,rows,cols] = getPixelWeights(column, row,width,height,who
     [imCells,histogram] = weightedHist3D( column, row, width, height, wholeIm);
     
     %histogram
-    imCells
+    %imCells
     
     [imHeight,imWidth,imDim] = size(imCells);
     imSize = imWidth*imHeight;
@@ -27,10 +27,14 @@ function [pixelWeights,rows,cols] = getPixelWeights(column, row,width,height,who
             sqrt( ...
                 targetHistogram(bin(1),bin(2),bin(3)) / histogram(bin(1),bin(2),bin(3))  ...
             );
+        if (isnan(pixelWeights(rows(i),cols(i))) || pixelWeights(rows(i),cols(i)) == Inf)
+            disp('is NaN or is Inf')
+            pixelWeights(rows(i),cols(i)) = 0;
+        end
     end
 
 
-    pixelWeights 
+    %pixelWeights 
     pixelWeights = reshape(pixelWeights,imSize,1);
     
 end

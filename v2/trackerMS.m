@@ -1,7 +1,8 @@
 function trackerMS() 
 
   
-  directory = '../../MoreFrames_part_1';
+  %directory = '../../MoreFrames_part_1';
+  directory = '../../TestFrames1/' ;
   files = dir(directory);
   nrFiles = size(files,1)-2; % Discard '.' and '..'
   
@@ -28,7 +29,7 @@ function trackerMS()
   width
   height
   
-  smallestIncrement = 0.000001;
+  smallestIncrement = 0.0001;
   
   for n = 4:nrFiles
     im = imread([directory '/' files(n).name]);	
@@ -39,11 +40,13 @@ function trackerMS()
     xUpdated =  (xNew)+x;
     yUpdated =  (yNew)+y;
     
-    norm([xUpdated,yUpdated] - [x,y])
+    %norm([xUpdated,yUpdated] - [x,y])
     
     if (norm([xUpdated,yUpdated] - [x,y]) >= smallestIncrement)
         x=round(xUpdated)
         y=round(yUpdated)
+    else
+        disp('NO UPDATE');
     end
     
     im = imPlusDot(im,x,y);

@@ -11,10 +11,10 @@ function im = imPlusDot(im, x,y)
   colorMO = repmat(colorO,dotInterval*2+1,dotInterval*2+1);
   colorMI = repmat(colorI,dotInterval*2-1,dotInterval*2-1);
   
-%   minY = max(1, y-dotInterval);
-%   maxY = min(h,y+dotInterval);
-%   minX = max(1,x-dotInterval);
-%   maxX = min(w, x+dotInterval);
+  minY = max(1, y-dotInterval);
+  maxY = min(h,y+dotInterval);
+  minX = max(1,x-dotInterval);
+  max
   im(y-dotInterval:y+dotInterval,x-dotInterval:x+dotInterval,:) = colorMO;
   im(y-dotInterval+1:y+dotInterval-1,x-dotInterval+1:x+dotInterval-1,:) = colorMI;
   

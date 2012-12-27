@@ -59,11 +59,11 @@ function [imCells,histogram] = weightedHist3D(column,row, width, height, wholeIm
     else
         eHeight = height;
     end
-    
-    minRowsWholeIm
-    maxRowsWholeIm
-    minColumnsWholeIm
-    maxColumnsWholeIm
+%     
+%     minRowsWholeIm
+%     maxRowsWholeIm
+%     minColumnsWholeIm
+%     maxColumnsWholeIm
     
     
     
@@ -76,8 +76,8 @@ function [imCells,histogram] = weightedHist3D(column,row, width, height, wholeIm
         
     
     
-    %imshow(uint8(im));
-    %pause(0.5);
+   % imshow(uint8(im));
+   % pause(1);
     %im
     
     weightMaskIm =  getWeightMask(im) ;
@@ -109,9 +109,9 @@ function [imCells,histogram] = weightedHist3D(column,row, width, height, wholeIm
                 frequencies(pixelValue(1),pixelValue(2),pixelValue(3)) + ...
                 weightMaskIm(row,col) * ...
                 1;
-            col;
-            row;
-            weightMaskIm(row,col);
+            %col
+            %row
+            %weightMaskIm(row,col)
  		end
     end	
 
